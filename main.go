@@ -7,7 +7,6 @@ import (
 	"os"
 	"os/signal"
 	"syscall"
-	"time"
 
 	"github.com/amimof/huego"
 	"github.com/pion/dtls/v2"
@@ -25,10 +24,19 @@ type Lightshow struct {
 	Group             *huego.Group
 	DTLSConn          *dtls.Conn
 	MessageBytes      []byte
+	Spotify           SpotifyManager
 }
 
 // Config is where config gets marshalled/unmarshalled from/to
 type Config struct {
+	Log struct {
+		Level string
+	}
+	Spotify struct {
+		ClientID     string
+		ClientSecret string
+		// UserToken    *oauth2.Token
+	}
 	Hue struct {
 		Address     string
 		User        string
@@ -41,9 +49,6 @@ type Config struct {
 			X float64
 			Y float64
 		}
-	}
-	Log struct {
-		Level string
 	}
 }
 
@@ -88,36 +93,16 @@ func main() {
 	lightshow.ConfigureEntertainmentZone()
 	defer lightshow.DeleteEntertainmentZone()
 
+	// Connect to Spotify
+	lightshow.SetupSpotify()
+
 	// Start streaming
 	lightshow.StartDTLSStreaming()
 	defer lightshow.Group.DisableStreaming()
 	defer lightshow.DTLSConn.Close()
 
-	go func() {
-		r, g, b := 0, 0, 0
-		bri := 1
-		for {
-			if (r == 0) && (g == 0) && (b == 0) {
-				r = 1
-				bri = 1
-			} else if (r == 1) && (g == 0) && (b == 0) {
-				r = 0
-				g = 1
-			} else if (r == 0) && (g == 1) && (b == 0) {
-				g = 0
-				b = 1
-			} else if (r == 0) && (g == 0) && (b == 1) {
-				b = 0
-				bri = 0
-			}
-			for _, light := range []int{7, 5, 8, 13, 15, 11, 10, 12, 14, 9} {
-				lightshow.SetLights([]int{light}, r*255, g*255, b*255, float32(bri))
-				time.Sleep(time.Millisecond * 100)
-			}
-		}
-	}()
-
 	// Loop until we get #cancelled
+	lightshow.testSpotifyThing()
 	<-ctx.Done()
 }
 
