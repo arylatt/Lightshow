@@ -15,7 +15,7 @@ import (
 const SpotifyCallbackPath = "/spotify/callback"
 
 // SpotifyCallbackPort indicates the port to redirect users to for Spotify OAuth2 flow
-const SpotifyCallbackPort = 3000
+const SpotifyCallbackPort = 32321
 
 // SpotifyManager owns Spotify related items
 type SpotifyManager struct {
@@ -61,7 +61,7 @@ func (l *Lightshow) SetupSpotify() {
 	loginHandler.HandleFunc(SpotifyCallbackPath, l.spotifyLoginHandler)
 
 	l.Spotify.LoginServer = &http.Server{
-		Addr:         fmt.Sprintf(":%d", SpotifyCallbackPort),
+		Addr:         fmt.Sprintf("127.0.0.1:%d", SpotifyCallbackPort),
 		Handler:      loginHandler,
 		ReadTimeout:  time.Second * 5,
 		WriteTimeout: time.Second * 5,
