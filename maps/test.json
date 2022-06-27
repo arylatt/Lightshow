@@ -1,0 +1,40 @@
+{
+  "events": [
+    {
+      "startTime": 0,
+      "endTime": 0,
+      "endState": {
+        "colour": [255,255,255],
+        "brightness": 1
+      },
+      "lights": [2]
+    },
+    {
+      "startTime": 1,
+      "endTime": 1,
+      "startState": {
+        "colour": [255,255,255],
+        "brightness": 1
+      },
+      "lights": [2]
+    },
+    {
+      "startTime": 2,
+      "endTime": 2,
+      "endState": {
+        "colour": [255,255,255],
+        "brightness": 1
+      },
+      "lights": [2]
+    },
+    {
+      "startTime": 3,
+      "endTime": 3,
+      "startState": {
+        "colour": [255,255,255],
+        "brightness": 1
+      },
+      "lights": [2]
+    }
+  ]
+}
